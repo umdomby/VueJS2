@@ -7,7 +7,7 @@
         />
 
         <v-btn @click="save">Save</v-btn>
-      <v-btn @click="editCheck">{{vibor}}</v-btn>
+        <v-btn @click="editCheck">{{vibor}}</v-btn>
     </v-layout>
 </template>
 
@@ -52,7 +52,6 @@
 
             },
             editCheck(){
-               // this.chek ? this.chek = true : this.chek = false
               if(this.vibor == false){
                 this.vibor = true
               }else{
