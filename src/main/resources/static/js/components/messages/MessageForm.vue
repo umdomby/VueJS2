@@ -1,59 +1,63 @@
 <template>
-    <div>
-        <input type="text" placeholder="Write something" v-model="text" />
-        <input type="button" value="Save" @click="save" />
-    </div>
+    <v-layout row>
+        <v-text-field
+                label="New message"
+                placeholder="Write something"
+                v-model="text"
+        />
+
+        <v-btn @click="save">Save</v-btn>
+      <v-btn @click="editCheck">{{vibor}}</v-btn>
+    </v-layout>
 </template>
 
 <script>
-
-    // function getIndex(list, id) {
-    //     for (var i = 0; i < list.length; i++ ) {
-    //         if (list[i].id === id) {
-    //             return i
-    //         }
-    //     }
-    //
-    //     return -1
-    // }
-
+    import { mapActions } from 'vuex'
 
     export default {
-        // props: ['messages', 'messageAttr'],
-        props: ['messages'],
+        props: ['messageAttr'],
         data() {
             return {
                 text: '',
-                id: ''
+                id: '',
+                vibor: false,
+
             }
         },
-        // watch: {
-        //     messageAttr(newVal, oldVal) {
-        //         this.text = newVal.text
-        //         this.id = newVal.id
-        //     }
-        // },
+        watch: {
+            messageAttr(newVal, oldVal) {
+                this.text = newVal.text
+                this.id = newVal.id
+                this.vibor = newVal.vibor
+            }
+        },
         methods: {
+            ...mapActions(['addMessageAction', 'updateMessageAction']),
             save() {
-                const message = { text: this.text }
+                const message = {
+                    id: this.id,
+                    text: this.text,
+                    vibor: this.vibor
+                }
 
                 if (this.id) {
-                    // this.$resource('/message{/id}').update({id: this.id}, message).then(result =>
-                    //     result.json().then(data => {
-                    //         const index = getIndex(this.messages, data.id)
-                    //         this.messages.splice(index, 1, data)
-                    //         this.text = ''
-                    //         this.id = ''
-                    //     })
-                    // )
+                    this.updateMessageAction(message)
                 } else {
-                    this.$resource('/message{/id}').save({}, message).then(result =>
-                        result.json().then(data => {
-                            this.messages.push(data)
-                            this.text = ''
-                        })
-                    )
+                    this.addMessageAction(message)
                 }
+
+                this.text = ''
+                this.id = ''
+                this.vibor = false
+
+            },
+            editCheck(){
+               // this.chek ? this.chek = true : this.chek = false
+              if(this.vibor == false){
+                this.vibor = true
+              }else{
+                this.vibor = false
+              }
             }
         }
     }
